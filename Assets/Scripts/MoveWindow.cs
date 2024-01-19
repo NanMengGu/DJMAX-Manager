@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class MoveWindow : MonoBehaviour
 {
+    public string handle;
     public Toggle movement;
     public Toggle movementX;
     public Toggle movementY;
@@ -13,6 +14,8 @@ public class MoveWindow : MonoBehaviour
     public Button apply;
     public int speedX;
     public int speedY;
+    int finalSpeedX;
+    int finalSpeedY;
     public bool isMovement;
     public bool isMovementX;
     public bool isMovementY;
@@ -20,7 +23,7 @@ public class MoveWindow : MonoBehaviour
     int monitorY = Win32API.GetSystemMetrics(1);
     bool isLeft = false;
     bool isTop = true;
-    IntPtr hWnd = new IntPtr(Convert.ToInt32("0006065A", 16));
+    IntPtr hWnd;
 
     public void OnSpeedXEndEdit()
     {
@@ -41,6 +44,7 @@ public class MoveWindow : MonoBehaviour
 
     void Start()
     {
+        hWnd = new IntPtr(Convert.ToInt32(handle, 16));
         int screenWidth = Win32API.GetSystemMetrics(0);
         int screenHeight = Win32API.GetSystemMetrics(1);
 
@@ -55,50 +59,53 @@ public class MoveWindow : MonoBehaviour
     }
 
     void Update()
+{
+    if (isMovement)
     {
-        if (isMovement)
+        Win32API.GetWindowRect(hWnd, out Win32API.RECT rect);
+        
+        if (isMovementX)
         {
-            Win32API.GetWindowRect(hWnd, out Win32API.RECT rect);
-            if (isMovementX)
+            if (isLeft)
             {
-                if (isLeft)
+                if (speedX > 0) speedX *= -1;
+                if (rect.Left <= 0)
                 {
-                    if (speedX == -1) speedX *= -1;
-                    if (rect.Left <= 0)
-                    {
-                        isLeft = false;
-                    }
-                }
-                else
-                {
-                    if (speedX == 1) speedX *= -1;
-                    if (rect.Right >= monitorX)
-                    {
-                        isLeft = true;
-                    }
+                    isLeft = false;
                 }
             }
-
-            if (isMovementY)
+            else
             {
-                if (isTop)
+                if (speedX < 0) speedX *= -1;
+                if (rect.Right >= monitorX)
                 {
-                    if (speedY == -1) speedY *= -1;
-                    if (rect.Top <= 0)
-                    {
-                        isTop = false;
-                    }
-                }
-                else
-                {
-                    if (speedY == 1) speedY *= -1;
-                    if (rect.Bottom >= monitorY)
-                    {
-                        isTop = true;
-                    }
+                    isLeft = true;
                 }
             }
-            Win32API.MoveWindow(hWnd, rect.Left + speedX, rect.Top + speedY, rect.Right - rect.Left, rect.Bottom - rect.Top, false);
         }
+
+        if (isMovementY)
+        {
+            if (isTop)
+            {
+                if (speedY > 0) speedY *= -1;
+                if (rect.Top <= 0)
+                {
+                    isTop = false;
+                }
+            }
+            else
+            {
+                if (speedY < 0) speedY *= -1;
+                if (rect.Bottom >= monitorY)
+                {
+                    isTop = true;
+                }
+            }
+        }
+
+        Win32API.MoveWindow(hWnd, rect.Left + speedX, rect.Top + speedY, rect.Right - rect.Left, rect.Bottom - rect.Top, false);
     }
+}
+
 }

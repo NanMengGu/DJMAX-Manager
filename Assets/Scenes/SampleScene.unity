@@ -468,7 +468,7 @@ MonoBehaviour:
   m_OnDidEndEdit:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1750486608}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: MoveWindow, Assembly-CSharp
         m_MethodName: OnSpeedXEndEdit
         m_Mode: 1
@@ -1549,7 +1549,7 @@ MonoBehaviour:
   m_OnDidEndEdit:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1750486608}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: MoveWindow, Assembly-CSharp
         m_MethodName: OnSpeedYEndEdit
         m_Mode: 1
@@ -1923,7 +1923,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1750486609}
-  - component: {fileID: 1750486608}
+  - component: {fileID: 1750486610}
   m_Layer: 0
   m_Name: MoveWindow
   m_TagString: Untagged
@@ -1931,29 +1931,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1750486608
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1750486607}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 70c1a34032d4c934c8920a97abe7315d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  movement: {fileID: 682732342}
-  movementX: {fileID: 107835783}
-  movementY: {fileID: 1991808185}
-  inputSpeedX: {fileID: 451151338}
-  inputSpeedY: {fileID: 1498439815}
-  apply: {fileID: 669415237}
-  speedX: 5
-  speedY: 5
-  isMovement: 1
-  isMovementX: 1
-  isMovementY: 1
 --- !u!4 &1750486609
 Transform:
   m_ObjectHideFlags: 0
@@ -1969,6 +1946,30 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1750486610
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1750486607}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b58aef7455046d64a9e2134525f00836, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  handle: 00010BC0
+  movement: {fileID: 682732342}
+  movementX: {fileID: 107835783}
+  movementY: {fileID: 1991808185}
+  inputSpeedX: {fileID: 451151338}
+  inputSpeedY: {fileID: 1498439815}
+  apply: {fileID: 669415237}
+  speedX: 50
+  speedY: 0
+  isMovement: 1
+  isMovementX: 1
+  isMovementY: 0
 --- !u!1 &1761201407
 GameObject:
   m_ObjectHideFlags: 0
