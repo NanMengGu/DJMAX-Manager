@@ -1,5 +1,6 @@
 using UnityEngine;
 using System;
+using System.Globalization;
 using UnityEngine.UI;
 
 public class MoveWindow : MonoBehaviour
@@ -68,14 +69,31 @@ public class MoveWindow : MonoBehaviour
 
     public void OnClick()
     {
+        // validate and initialize handle first
         InitializationValue();
-        speedX = int.Parse(inputSpeedX.text);
-        speedY = int.Parse(inputSpeedY.text);
+
+        // 안전하게 파싱: 비어있거나 잘못된 입력이 들어오면 0으로 초기화하고 사용자에게 경고 로그 출력
+        if (!int.TryParse(inputSpeedX.text, NumberStyles.Integer, CultureInfo.InvariantCulture, out speedX))
+        {
+            speedX = 0;
+            inputSpeedX.text = "0";
+        }
+
+        if (!int.TryParse(inputSpeedY.text, NumberStyles.Integer, CultureInfo.InvariantCulture, out speedY))
+        {
+            speedY = 0;
+            inputSpeedY.text = "0";
+        }
     }
 
     public void OnToggleMovement()
     {
         isMovement = movement.isOn;
+        if (!isMovement)
+        {
+            Win32API.GetWindowRect(hWnd, out Win32API.RECT rect);
+            Win32API.MoveWindow(hWnd, (int)(monitorX * 0.5f - windowWidth * 0.5f), (int)(monitorY * 0.5f - windowHeight * 0.5f), windowWidth, windowHeight, true);
+        }
     }
 
     public void OnToggleMovementX()
@@ -100,7 +118,30 @@ public class MoveWindow : MonoBehaviour
 
     void InitializationValue()
     {
-        hWnd = new IntPtr(Convert.ToInt32(handle, 16));
+        // handle 검증: 빈값 또는 잘못된 형식(예: 0x... 포함) 처리
+        if (string.IsNullOrWhiteSpace(handle))
+        {
+            hWnd = IntPtr.Zero;
+            return;
+        }
+
+        // "0x" 접두사가 있을 수 있으므로 제거
+        string hex = handle.StartsWith("0x", StringComparison.OrdinalIgnoreCase) ? handle.Substring(2) : handle;
+
+        if (!int.TryParse(hex, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out int parsedHandle))
+        {
+            hWnd = IntPtr.Zero;
+            return;
+        }
+
+        hWnd = new IntPtr(parsedHandle);
+
+        if (hWnd == IntPtr.Zero)
+        {
+            return;
+        }
+
+        // 이후 Win32 호출 전 hWnd 유효성은 확인했으므로 안전하게 호출
         Win32API.GetWindowRect(hWnd, out Win32API.RECT rect);
 
         windowWidth = rect.Right - rect.Left;
